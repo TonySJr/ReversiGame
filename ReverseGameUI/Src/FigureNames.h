@@ -5,8 +5,8 @@
 #define Board_Cells 64
 using namespace sf;
 
-extern char RevBoard[Board_Cells];
-extern int AIWeightBoard[Board_Cells];
+extern std::array<char,Board_Cells> RevBoard;
+extern std::array<int, Board_Cells> AIWeightBoard;
 extern class figure Board;
 extern class figure Board2;
 extern class figure BlackCoin;

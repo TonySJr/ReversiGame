@@ -9,6 +9,7 @@ using namespace sf;
 extern bool changes_flag;
 extern Text text;
 extern Vector2f textZeropos;
+extern std::vector<int> cells_to_check;
 
 void draw(class RenderWindow& window)
 {
@@ -43,7 +44,7 @@ void draw(class RenderWindow& window)
             ColoredSquare.setPos(8.08f+x, y);           //textZeropos.x + (64 * x), textZeropos.y + (64 * y));
             window.draw(ColoredSquare.spritefigure());
 
-            std::string s = std::to_string(AIWeightBoard[x + y * ROWS]);
+            std::string s = std::to_string(cells_to_check.at(x + y * ROWS));
             text.setString(s);
             text.setPosition(textZeropos + Vector2f(64 * x, 64 * y));
             window.draw(text);

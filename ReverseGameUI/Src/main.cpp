@@ -1,8 +1,7 @@
-#include <pch.h>
+#include "pch.h"
 #include "FigureNames.h"
 #include "functions.h"
 #include "figure.h"
-
 
 //  values
 #define WindowWidth 1029
@@ -11,15 +10,12 @@ bool AI_turn_flag = false;
 bool changes_flag = true;
 int globalcounter = 0;
 
-
-
 //  functions 
 void Physics();
 void Swap(char* arr, int x1, int y1, int x2, int y2);
 Vector2i array_walls(int x, int y);
 bool end_procedure(class RenderWindow& window);
 using namespace sf;
-
 
 Vector2f textZeropos(539, 13);
 sf::Text text;
@@ -72,7 +68,6 @@ int main()
     // посчитать кто победил
     return end_procedure(window);
 }
-
 
 extern Vector2i mouse_Position;
 extern bool button_flag;

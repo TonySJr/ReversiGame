@@ -45,10 +45,12 @@ void draw(class RenderWindow& window)
             ColoredSquare.setPos(8.08f+x, y);           //textZeropos.x + (64 * x), textZeropos.y + (64 * y));
             window.draw(ColoredSquare.spritefigure());
             //  get vectors values and draw it
-            std::string s = std::to_string(cells_to_check.at(x + y * ROWS));
+            
+            std::string s = std::to_string(x + y * ROWS);
             text.setString(s);
             text.setPosition(textZeropos + Vector2f(64 * x, 64 * y));
             window.draw(text);
+            
         }
     }
 
@@ -57,7 +59,6 @@ void draw(class RenderWindow& window)
     changes_flag = false;
 }
 extern int globalcounter;
-int button_delay = 0;
 //char button_flag = 'R';
 bool button_flag = false;
 Vector2i mouse_Position;
@@ -76,24 +77,21 @@ void mouseShedule(class RenderWindow& window)
             if (button_flag == RED)                    //red human turn
             {
                 RevBoard[mouse_Position.x + mouse_Position.y * ROWS] = 'R';
-                std::cout << "RED\n";
-                globalcounter++;
-                std::cout << " Turn - " << globalcounter << "\n";
-                button_flag = !button_flag;
+                std::cout << "\tRED - Human\n";
             }
             else                                        // black AI turn
             {
                 AI Jarvis;
+
                 Jarvis.x = mouse_Position.x;
                 Jarvis.y = mouse_Position.y;
                 // AI back move
                 RevBoard[Jarvis.x + Jarvis.y * ROWS] = 'B';
-                std::cout << "AI turn\n";
-                globalcounter++;
-                std::cout << " Turn - " << globalcounter << "\n";
-                button_flag = !button_flag;
-
+                std::cout << "\tBlack - AI turn\n";
             }
+            globalcounter++;
+            std::cout << "\tTurn -\t" << globalcounter << "\n";
+            button_flag = !button_flag;
             /*
             //  human way to play game
             else
@@ -106,12 +104,7 @@ void mouseShedule(class RenderWindow& window)
 
             }
             */
-            button_delay = 0;
-            //button_flag = !button_flag;
-            WeightCalculate();
-
             std::cout << "mouse activity\n";
-
             changes_flag = true;
         }
     }

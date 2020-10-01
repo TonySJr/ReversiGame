@@ -3,27 +3,21 @@
 #include "AI.h"
 
 std::array<int, Board_Cells> AIWeightBoard = { 0 };
-std::vector<int> cells_to_check(Board_Cells);
+std::array<char, Board_Cells> TempBoard = { 0 };    // board to check turns
 
-void WeightCalculate()
+std::vector<int> cells_to_check;
+int cnt_black_coins = 0;
+void WeightCalculate(std::array<char,Board_Cells> board)
 {
-    int cnt = 0;
-    for (int i = 0; i < Board_Cells; i++)
+    cnt_black_coins = 0;
+    for (auto& cell : board)
     {
-        AIWeightBoard[i] = 0;
-        cells_to_check.at(i) = cnt;
-        if (RevBoard[i] == 'R')
+        if (cell == 'B')
         {
-            cells_to_check.at(i) = 0;
-            AIWeightBoard[i] = 255;
+            cnt_black_coins++;
         }
-        else if (RevBoard[i] == 'B')
-        {
-            cells_to_check.at(i) = 0;
-            AIWeightBoard[i] = 255;
-        }
-        cnt++;
     }
+    std::cout << "Black coins - \t" << cnt_black_coins << std::endl;
 }
 
 void AI_turn(std::array<char,Board_Cells> &RevBoard)

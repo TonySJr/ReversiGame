@@ -17,6 +17,8 @@ using namespace sf;
 Vector2f textZeropos(539, 13);
 sf::Text text;
 
+extern std::vector<int> cells_to_check;
+
 int main()
 {
     // create the window
@@ -40,8 +42,8 @@ int main()
 
     if (!InitTextures()) return 0;
 
-    WeightCalculate();
-    Physics();
+    //WeightCalculate(RevBoard);
+    //Physics();
     // run the program as long as the window is open
     while (window.isOpen())
     {
@@ -51,14 +53,23 @@ int main()
             if (event.type == Event::Closed)
                 window.close();
         }
-        mouseShedule(window);
-        Physics();
-        
+        mouseShedule(window);   // return changes_flag and put player coin on a table
+
         if (changes_flag == true)
         {
+            Physics();
+            WeightCalculate(RevBoard);
             std::cout << "draw activity\n";
             draw(window);
-            AI_turn(RevBoard);
+            //  fill vector with turns
+            for (int i = 0; i < Board_Cells; i++)
+            {
+                if (RevBoard[i] == '0')
+                {
+                    cells_to_check.push_back(i);
+                }
+            }
+            cells_to_check.clear();
 
         }
         // if steps is over, or right mouse waas pressed end cycle

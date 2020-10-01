@@ -61,7 +61,7 @@ public:
 	}
 
 	Sprite& spritefigure();
-	void ColorChange(int color);
+	void ColorChange(unsigned int color);
 	bool textureready() const;
 	void setPos(float x, float y);
 };

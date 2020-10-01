@@ -2,8 +2,10 @@
 #include "FigureNames.h"
 #include "figure.h"
 #include "functions.h"
+#include "AI.h"
 
-#define RED true
+#define RED false
+#define AI_turn true
 
 using namespace sf;
 extern bool changes_flag;
@@ -38,12 +40,11 @@ void draw(class RenderWindow& window)
             default:
                 break;
             }
- 
+            //  draw squares with indication of coin
             ColoredSquare.ColorChange(AIWeightBoard[x + y * ROWS]);
-            
             ColoredSquare.setPos(8.08f+x, y);           //textZeropos.x + (64 * x), textZeropos.y + (64 * y));
             window.draw(ColoredSquare.spritefigure());
-
+            //  get vectors values and draw it
             std::string s = std::to_string(cells_to_check.at(x + y * ROWS));
             text.setString(s);
             text.setPosition(textZeropos + Vector2f(64 * x, 64 * y));
@@ -57,11 +58,10 @@ void draw(class RenderWindow& window)
 }
 extern int globalcounter;
 int button_delay = 0;
-bool button_flag = true;
+//char button_flag = 'R';
+bool button_flag = false;
 Vector2i mouse_Position;
-
 std::chrono::steady_clock::time_point start, end;
-
 void mouseShedule(class RenderWindow& window)
 {
 
@@ -73,22 +73,41 @@ void mouseShedule(class RenderWindow& window)
         {
             mouse_Position = (Mouse::getPosition(window)) / 64; // window is a sf::Window
             // get the local mouse position (relative to a window)
-            if (button_flag == RED)                    //red
+            if (button_flag == RED)                    //red human turn
             {
                 RevBoard[mouse_Position.x + mouse_Position.y * ROWS] = 'R';
                 std::cout << "RED\n";
                 globalcounter++;
                 std::cout << " Turn - " << globalcounter << "\n";
+                button_flag = !button_flag;
             }
+            else                                        // black AI turn
+            {
+                AI Jarvis;
+                Jarvis.x = mouse_Position.x;
+                Jarvis.y = mouse_Position.y;
+                // AI back move
+                RevBoard[Jarvis.x + Jarvis.y * ROWS] = 'B';
+                std::cout << "AI turn\n";
+                globalcounter++;
+                std::cout << " Turn - " << globalcounter << "\n";
+                button_flag = !button_flag;
+
+            }
+            /*
+            //  human way to play game
             else
             {
                 RevBoard[mouse_Position.x + mouse_Position.y * ROWS] = 'B';
                 std::cout << "BLACK\n";
                 globalcounter++;
                 std::cout << " Turn - " << globalcounter << "\n";
+                button_flag = !button_flag;
+
             }
+            */
             button_delay = 0;
-            button_flag = !button_flag;
+            //button_flag = !button_flag;
             WeightCalculate();
 
             std::cout << "mouse activity\n";
@@ -99,40 +118,3 @@ void mouseShedule(class RenderWindow& window)
     end = std::chrono::steady_clock::now();
     
 }
-
-/*
-
-if (Mouse::isButtonPressed(Mouse::Left))
-{
-    if (button_delay > 1000)
-    {
-        mouse_Position = (Mouse::getPosition(window)) / 64; // window is a sf::Window
-        // get the local mouse position (relative to a window)
-        if (button_flag == RED)                    //red
-        {
-            RevBoard[mouse_Position.x + mouse_Position.y * ROWS] = 'R';
-            std::cout << "RED\n";
-            globalcounter++;
-            std::cout << " Turn - " << globalcounter << "\n";
-        }
-        else
-        {
-            RevBoard[mouse_Position.x + mouse_Position.y * ROWS] = 'B';
-            std::cout << "BLACK\n";
-            globalcounter++;
-            std::cout << " Turn - " << globalcounter << "\n";
-        }
-        button_delay = 0;
-        button_flag = !button_flag;
-        WeightCalculate();
-
-        std::cout << "mouse activity\n";
-
-        changes_flag = true;
-    }
-}
-button_delay++;
-if (button_delay > 100000) button_delay = 0;
-
-}
-*/

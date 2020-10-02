@@ -7,7 +7,7 @@
 
 extern Vector2i mouse_Position;
 //extern char button_flag;
-extern bool button_flag;
+extern char button_flag;
 bool board_end_flag = false;
 bool end_flag = false;
 Vector2i UP(0, -1), UPLEFT(-1, -1), LEFT(-1, 0), LEFTDOWN(-1, 1), DOWN(0, 1), RIGHTDOWN(1, 1), RIGHT(1, 0), UPRIGHT(1, -1);
@@ -16,9 +16,10 @@ void Physics()
 {
     // место последней монетки
     Vector2i Position = mouse_Position;
+    std::cout << "\n Last player coin -\t" << Position.x << Position.y << std::endl;
     // массив векторов клеток, которые необходимо перевернуть
     Vector2i coins_array[8];
-    if (button_flag == false)    //Black coin
+    if (button_flag == 'B')    //Black coin
     {
         for (int i = 0; i < (sizeof(array_Dir) / sizeof(array_Dir[0])); i++)
         {
@@ -106,7 +107,102 @@ void Physics()
 
     }
 }
+//  physics to all
+void Physics(std::array<char,Board_Cells> &board, Vector2i &last_coin)
+{
+    // место последней монетки
+    Vector2i Position = last_coin;
+    // массив векторов клеток, которые необходимо перевернуть
+    Vector2i coins_array[8];
+    
+    if (button_flag == 'B')    //Black coin
+    {
+        for (int i = 0; i < (sizeof(array_Dir) / sizeof(array_Dir[0])); i++)
+        {
+            Vector2i tempVector(0, 0);
+            int j = 0;
+            board_end_flag = false;
+            end_flag = false;
+            int coin_count = 0;
+            //  провер€ем каждое направление пока не дойдем до конца доски или 
+            //  не найдем свою монетку после монетки противника 
+            while ((board_end_flag == false) && (end_flag == false) && (j < 8))
+            {
+                // check all directions to the opponentТs coin
+                Vector2i vector_safe = array_walls((Position.x + (*array_Dir[i]).x + tempVector.x), (Position.y + (*array_Dir[i]).y) + tempVector.y);
+                if ((board[vector_safe.x + vector_safe.y * ROWS] == 'R') && (board_end_flag == false))
+                {
+                    tempVector += (*array_Dir[i]);
+                    coins_array[j] = Vector2i(vector_safe.x, vector_safe.y);
+                    coin_count++;
+                }
+                else if ((board[vector_safe.x + vector_safe.y * ROWS] == 'B') && (board_end_flag == false))
+                {
+                    //  если на пути проверки нашли свою монетку
+                    //  закрашиваем все клетки между.
+                    for (int k = 0; k < coin_count; k++)
+                    {
+                        board[coins_array[k].x + (coins_array[k].y) * ROWS] = 'B';
+                        coins_array[k] = Vector2i(0, 0);
+                    }
+                    //  завершаем направление
+                    end_flag = true;
+                }
+                else
+                {
+                    //  если не R то скипаем направление
+                    end_flag = true;
+                }
+                j++;
+            }
+            coin_count = 0;
+        }
+    }
+    else                //red coin
+    {
+        for (int i = 0; i < (sizeof(array_Dir) / sizeof(array_Dir[0])); i++)
+        {
+            Vector2i tempVector(0, 0);
+            int j = 0;
+            board_end_flag = false;
+            end_flag = false;
+            int coin_count = 0;
+            //  провер€ем каждое направление пока не дойдем до конца доски или 
+            //  не найдем свою монетку после монетки противника 
+            while ((board_end_flag == false) && (end_flag == false) && (j < 8))
+            {
+                // check all directions to the opponentТs coin
+                Vector2i vector_safe = array_walls((Position.x + (*array_Dir[i]).x + tempVector.x), (Position.y + (*array_Dir[i]).y) + tempVector.y);
+                if ((board[vector_safe.x + vector_safe.y * ROWS] == 'B') && (board_end_flag == false))
+                {
+                    tempVector += (*array_Dir[i]);
+                    coins_array[j] = Vector2i(vector_safe.x, vector_safe.y);
+                    coin_count++;
+                }
+                else if ((board[vector_safe.x + vector_safe.y * ROWS] == 'R') && (board_end_flag == false))
+                {
+                    //  если на пути проверки нашли свою монетку
+                    //  закрашиваем все клетки между.
+                    for (int k = 0; k < coin_count; k++)
+                    {
+                        board[coins_array[k].x + (coins_array[k].y) * ROWS] = 'R';
+                        coins_array[k] = Vector2i(0, 0);
+                    }
+                    //  завершаем направление
+                    end_flag = true;
+                }
+                else
+                {
+                    //  если не R то скипаем направление
+                    end_flag = true;
+                }
+                j++;
+            }
+            coin_count = 0;
+        }
 
+    }
+}
 
 void Swap(char* arr, int x1, int y1, int x2, int y2)
 {

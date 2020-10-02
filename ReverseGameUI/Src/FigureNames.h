@@ -15,4 +15,5 @@ extern class figure ColoredSquare;
 
 // AI THINGS
 extern bool AI_turn_flag;
-
+extern int globalcounter;
+extern bool changes_flag;

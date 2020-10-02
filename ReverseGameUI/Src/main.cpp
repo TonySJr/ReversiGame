@@ -2,6 +2,8 @@
 #include "FigureNames.h"
 #include "functions.h"
 #include "figure.h"
+#include "AI.h"
+#include <thread>
 
 //  values
 #define WindowWidth 1029
@@ -18,9 +20,11 @@ Vector2f textZeropos(539, 13);
 sf::Text text;
 
 extern std::vector<int> cells_to_check;
-
+//extern Vector2i mouse_Position;
+AI Jarvis;
 int main()
 {
+    //  --------------------------------------------------------------------------------------------[1]
     // create the window
     RenderWindow window(VideoMode(WindowWidth, WindowHeight), "ReversiGame");
     
@@ -41,7 +45,7 @@ int main()
     text.setPosition(textZeropos);
 
     if (!InitTextures()) return 0;
-
+    //  --------------------------------------------------------------------------------------------[2]
     //WeightCalculate(RevBoard);
     //Physics();
     // run the program as long as the window is open
@@ -57,21 +61,28 @@ int main()
 
         if (changes_flag == true)
         {
-            Physics();
-            WeightCalculate(RevBoard);
-            std::cout << "draw activity\n";
             draw(window);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            //WeightCalculate(RevBoard);
+
             //  fill vector with turns
             for (int i = 0; i < Board_Cells; i++)
             {
                 if (RevBoard[i] == '0')
                 {
+                    //AIWeightBoard[i] = 255;
                     cells_to_check.push_back(i);
                 }
             }
+            if (Jarvis.AI_turn_flag)   //  if AI need to move
+            {
+                AI_turn(cells_to_check);
+            }
             cells_to_check.clear();
-
+            std::cout << "draw activity\n";
+            draw(window);
         }
+        AIWeightBoard.fill(0);
         // if steps is over, or right mouse waas pressed end cycle
         if ((globalcounter >= 60)||(Mouse::isButtonPressed(Mouse::Right))) break;
     }

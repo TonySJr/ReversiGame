@@ -4,6 +4,7 @@
 #include "functions.h"
 #include "AI.h"
 
+
 #define RED false
 #define AI_turn true
 
@@ -53,14 +54,14 @@ void draw(class RenderWindow& window)
             
         }
     }
-
     // end the current frame
     window.display();
     changes_flag = false;
 }
 extern int globalcounter;
-//char button_flag = 'R';
-bool button_flag = false;
+extern struct AI Jarvis;
+char button_flag = 'R';
+//bool button_flag = false;
 Vector2i mouse_Position;
 std::chrono::steady_clock::time_point start, end;
 void mouseShedule(class RenderWindow& window)
@@ -72,26 +73,17 @@ void mouseShedule(class RenderWindow& window)
         start = std::chrono::steady_clock::now();
         if (elapsed_seconds.count() > 0.5f)
         {
+            std::cout << "mouse activity\n";
             mouse_Position = (Mouse::getPosition(window)) / 64; // window is a sf::Window
             // get the local mouse position (relative to a window)
-            if (button_flag == RED)                    //red human turn
-            {
-                RevBoard[mouse_Position.x + mouse_Position.y * ROWS] = 'R';
-                std::cout << "\tRED - Human\n";
-            }
-            else                                        // black AI turn
-            {
-                AI Jarvis;
+            // red human turn
 
-                Jarvis.x = mouse_Position.x;
-                Jarvis.y = mouse_Position.y;
-                // AI back move
-                RevBoard[Jarvis.x + Jarvis.y * ROWS] = 'B';
-                std::cout << "\tBlack - AI turn\n";
-            }
+            RevBoard[mouse_Position.x + mouse_Position.y * ROWS] = 'R';
+            std::cout << "\tRED - Human\n";
+
             globalcounter++;
             std::cout << "\tTurn -\t" << globalcounter << "\n";
-            button_flag = !button_flag;
+            //button_flag = !button_flag;
             /*
             //  human way to play game
             else
@@ -104,8 +96,11 @@ void mouseShedule(class RenderWindow& window)
 
             }
             */
-            std::cout << "mouse activity\n";
+            Physics();
             changes_flag = true;
+            button_flag = 'B';
+            Jarvis.AI_turn_flag = true;
+            std::cout << "\tAI_turn_flag - " << Jarvis.AI_turn_flag << "\n";
         }
     }
     end = std::chrono::steady_clock::now();
